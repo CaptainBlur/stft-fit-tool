@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+javafx {
+    version = "18.0.2"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media', 'javafx.graphics' ]
+}
+
+group 'com.vulpesnovis'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven.jzy3d.org/releases"
+        allowInsecureProtocol = true
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation group: 'com.android.tools', name: 'sdklib', version: '22.1.1'
+    implementation group: 'net.sourceforge.jtransforms', name: 'jtransforms', version: '2.4.0'
+
+}
+
+test {
+    useJUnitPlatform()
+}
