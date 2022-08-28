@@ -46,7 +46,7 @@ public class JFXOperator {
         primaryStage.setScene(scene);
         ranges.setGradColors(Color.LIME, Color.RED);
     }
-    //todo сделать отрисовку по целым координатам, для любого из двух вариантов плотности
+
     public void orderAxisDrawing(int windowWidth, int windowHeight, int sampleRate, int fftSize, int windowSize, int fileDuration){
         ranges.setWindowSize(windowWidth, windowHeight);
         buffer.setTransformParams(sampleRate, fftSize, fileDuration/windowSize, windowSize);
@@ -88,8 +88,6 @@ public class JFXOperator {
         final int minimalIndent = (int) (textSize*1.0);
         final int xAxisLength = chartCanvasX - marginChartRight - marginChartLeft;
         final int yAxisLength = chartCanvasY - margin - marginChartBottom;
-        ranges.gradientAbsStart = marginChartLeft + xAxisLength + margin;
-        ranges.gradientAbsEnd = chartCanvasX - marginChartRight;
 
         final int textCountY = (yAxisLength-lineWidth)/(textSize+minimalIndent);
         final int maxTextCountX = (xAxisLength-lineWidth)/(textSize+minimalIndent);
@@ -193,26 +191,29 @@ public class JFXOperator {
             nodeList.add(text);
         }
 
-
-        //todo разобраться, какого хрена последнее окно криво выводится
+        //I don't like the way it's written, but yet, it's the less painful way to make it work
         double offsetX = ranges.wfAbscissaStart;
-        for (int i = 0; i < buffer.winCount; i++) {
+        int iMax = ranges.xSampleRes==-1 ? buffer.winCount : ranges.wfWeight;
+        int kMax = ranges.wfHeight-1;
+
+        for (int i = 0; i < iMax; i++) {
             //Drawing rectangles from up to down
+            int xSampleRes = ranges.xSampleRes==-1 ? (ranges.timeSampling[i+1] - ranges.timeSampling[i]) : (int) ranges.xSampleRes;
+            int ySampleRes = 1;
+
             double offsetY = ranges.wfOrdinateStart;
-            int c = 0;
-            for (int k = buffer.fftSize-1; k > 0; k--) {
+            for (int k = kMax; k > 0; k--) {
                 DecimalFormat df = new DecimalFormat("0000");
                 String timeIndex = df.format(i);
-                String freqIndex = df.format(k);
+                String freqIndex = df.format(ranges.freqSampling[k]);
                 String key = timeIndex + freqIndex;
                 int mag = buffer.fftDataset.get(Integer.parseInt(key));
-                if (k!=0) wfGC.setFill(colors.get(mag, Color.BLUE));
-                else wfGC.setFill(Color.LIME);
+                wfGC.setFill(colors.get(mag, Color.WHITE));
 
-                wfGC.fillRect(offsetX, offsetY, ranges.xSampleRes, ranges.ySampleRes );
-                offsetY+=ranges.ySampleRes;
+                wfGC.fillRect(offsetX, offsetY, xSampleRes, ySampleRes);
+                offsetY+= ySampleRes;
             }
-            offsetX+= ranges.xSampleRes;
+            offsetX += xSampleRes;
         }
         nodeList.add(wfCanvas);
 
@@ -235,10 +236,12 @@ public class JFXOperator {
         private double xSampleRes;
         private double ySampleRes;
         private double xSamplesInPixel;
-        private double ySamplesInPixel;
+        //Index represents a number of pixel, and value represents an index in the array that ships with the Dataset
+        private int[] freqSampling;
+        private int[] timeSampling;
+        private int wfHeight;
+        private int wfWeight;
 
-        private double gradientAbsStart;
-        private double gradientAbsEnd;
         private Text gradientStartText;
         private Text gradientEndText;
         private Color startCol;
@@ -251,15 +254,41 @@ public class JFXOperator {
         private void setGradColors(Color startCol, Color endCol){this.startCol = startCol;this.endCol = endCol;}
 
         //We need this method to define resolution of each pixel
+        //todo add a several-pixels-per-time drawing
         private void defineWfPixelRes(){
-            xSampleRes = (float)(wfAbscissaEnd-wfAbscissaStart)/(float)buffer.winCount;
-            ySampleRes = (float)(wfOrdinateEnd-wfOrdinateStart)/(float)buffer.fftSize;
+            double xInterim = (float)(wfAbscissaEnd-wfAbscissaStart)/(float)buffer.winCount;
+            double yInterim = (float)(wfOrdinateEnd-wfOrdinateStart)/(float)buffer.fftSize;
+            wfWeight = (int)(wfAbscissaEnd-wfAbscissaStart);
+            wfHeight = (int)(wfOrdinateEnd-wfOrdinateStart);
 
-//            if (xInterim>=1) xSampleRes = xInterim;
-//            else xSamplesInPixel = 1/xInterim;
-//
-//            if (yInterim>=1) ySampleRes = yInterim;
-//            else ySamplesInPixel = 1/yInterim;
+            if (xInterim>=1){
+                timeSampling = new int[buffer.winCount+1];
+                xSampleRes = -1;
+                double index = 0;
+                for (int i = 0; i <= buffer.winCount; i++) {
+                    //now, we are setting starting pixels indices for each window
+                    timeSampling[i] = (int)Math.round(index);
+                    index+=xInterim;
+                }
+                int g = 0;
+            }
+            else {
+                timeSampling = new int[wfWeight];
+                xSampleRes = 1;
+                double samplesInPixel = 1/xInterim;
+                double index = 0;
+                for (int i = 0; i < wfWeight; i++) {
+                    timeSampling[i] = (int)Math.round(index);
+                    index+=samplesInPixel;
+                }
+            }
+
+            freqSampling = new int[wfHeight];
+            double index = 0;
+            for (int i = 0; i < wfHeight; i++) {
+                freqSampling[i] = (int)Math.round(index);
+                index+=1/yInterim;
+            }
         }
 
         //Still not able to choose any color. Full functionality needed

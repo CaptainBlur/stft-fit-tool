@@ -33,6 +33,7 @@ public class Wav_reader {
             System.out.println("Please choose .wav file");
             System.exit(1);}
         wavFile.display();
+        System.out.println("");
     }
 
     public void readDefault(){
@@ -44,6 +45,7 @@ public class Wav_reader {
             System.out.println("Please choose .wav file");
             System.exit(1);}
         wavFile.display();
+        System.out.println("");
     }
 
     public double[] getDecodedInput(int winSize, int winCount){

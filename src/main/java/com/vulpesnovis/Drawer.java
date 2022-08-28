@@ -30,6 +30,7 @@ public class Drawer extends Application implements FFTDataListener {
 
     private static int windowWidth;
     private static int windowHeight;
+    private static String func;
 
     private Stage primaryStage;
     private JFXOperator operator;
@@ -39,8 +40,9 @@ public class Drawer extends Application implements FFTDataListener {
         for (int i = 0; i < args.length; i++) {
             if (i % 2 == 1){
                 switch (args[i - 1]) {
-                    case ("--width") -> windowWidth = Integer.parseInt(args[i]);
-                    case ("--height") -> windowHeight = Integer.parseInt(args[i]);
+                    case ("--width"), ("-w") -> windowWidth = Integer.parseInt(args[i]);
+                    case ("--height"), ("-h") -> windowHeight = Integer.parseInt(args[i]);
+                    case ("--win") -> func = args[i];
                 }
                 }
             }
@@ -52,16 +54,16 @@ public class Drawer extends Application implements FFTDataListener {
         this.primaryStage = primaryStage;
         //Here we need to get all Transform data and init JFX drawer,
         //Then handle all resize and button press events from here
-        primaryStage.setTitle("Spectrum drawing test");
+        primaryStage.setTitle("Spectrum waterfall");
 
         operator = new JFXOperator(primaryStage);
         Wav_reader reader = new Wav_reader(){};
         reader.readDefault();
         int sampleRate = reader.getSampleRate();
-        int winSize = 20;
-        int fftSize = 512/2;
+        int winSize = 40;
+        int fftSize = (int)Math.pow(2, 7);
         operator.orderAxisDrawing(windowWidth, windowHeight, sampleRate, fftSize, winSize, reader.getFileDuration());
-        Processor processor = new Processor(sampleRate, fftSize, winSize, this, true, false);
+        Processor processor = new Processor(sampleRate, fftSize, winSize, func, this, true, false);
 //        ranges.setAxesRanges(sampleRate, 405, reader.getSamplesCount()/processor.getWinSizeInSamples(), 20);
         processor.process(reader.getDecodedInput(winSize,-1));
 
@@ -78,7 +80,6 @@ public class Drawer extends Application implements FFTDataListener {
 //        System.out.println(fftDataset.size());
 
         operator.orderWaterfallDrawing(magMin,magMax,timeValues,freqValues,fftDataset);
-        System.out.println(magMin + " " + magMax);
 //        ranges.setGrad(magMin, magMax, Color.LIME, Color.RED);
 //        ArrayList<Node> nodeList = new ArrayList<>(drawAxis(windowWidth, windowHeight, (short) 1));
 //        nodeList.add(drawWaterfall(windowWidth, windowHeight));
