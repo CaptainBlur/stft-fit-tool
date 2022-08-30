@@ -234,8 +234,6 @@ public class JFXOperator {
         private double wfOrdinateEnd;
 
         private double xSampleRes;
-        private double ySampleRes;
-        private double xSamplesInPixel;
         //Index represents a number of pixel, and value represents an index in the array that ships with the Dataset
         private int[] freqSampling;
         private int[] timeSampling;

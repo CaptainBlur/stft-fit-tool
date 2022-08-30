@@ -67,11 +67,15 @@ public class Processor {
         for (int i = 0; i < winTotal; i++) {//cycle for each window in the whole output sequence
             if (oneWindow) i = buffer.length/(int)winSizeinSamples;
 
-            double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeinSamples)];
-
-            System.arraycopy(buffer, samplesCount, windowNResult, 0, (int)winSizeinSamples);
             DoubleFFT_1D transformer = new DoubleFFT_1D(fftSize*2);
+            double[] window = new double [(int)winSizeinSamples];
+            double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeinSamples)];
+            System.arraycopy(buffer, samplesCount, window, 0, (int)winSizeinSamples);
+
+            System.arraycopy(Windows.applyHann(window), 0, windowNResult, 0, window.length);
+
             transformer.realForward(windowNResult);
+//            transformer.realForward(windowNResult);
             float j = fftStep; //iterator for frequency val in output array (key)
 
             //cycle for each bin in every single window transform.
@@ -114,18 +118,11 @@ public class Processor {
                 j+=fftStep;
             }
 
-            arrayTimeValues[i] = timeOfInput;
+            if (!oneWindow) arrayTimeValues[i] = timeOfInput;
             timeOfInput += winSize;
             samplesCount += winSizeinSamples;
         }
         givenListener.onDataComputed(arrayTimeValues, arrayFreqValues, fftDataset, (int)magMin, (int)magMax);
     }
 
-    //This method implies one idle run of fft transform of the entire audio file,
-    //just in order to find out min and max values of Z axis
-//    public void getGradientRange(int )
-
-    public int getWinSizeInSamples(){
-        return (int)winSizeinSamples;
-    }
 }

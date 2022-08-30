@@ -40,9 +40,9 @@ public class Drawer extends Application implements FFTDataListener {
         for (int i = 0; i < args.length; i++) {
             if (i % 2 == 1){
                 switch (args[i - 1]) {
-                    case ("--width"), ("-w") -> windowWidth = Integer.parseInt(args[i]);
-                    case ("--height"), ("-h") -> windowHeight = Integer.parseInt(args[i]);
-                    case ("--win") -> func = args[i];
+                    case ("--width"), ("-W") -> windowWidth = Integer.parseInt(args[i]);
+                    case ("--height"), ("-H") -> windowHeight = Integer.parseInt(args[i]);
+                    case ("--win"), ("-w") -> func = args[i];
                 }
                 }
             }
@@ -60,8 +60,8 @@ public class Drawer extends Application implements FFTDataListener {
         Wav_reader reader = new Wav_reader(){};
         reader.readDefault();
         int sampleRate = reader.getSampleRate();
-        int winSize = 40;
-        int fftSize = (int)Math.pow(2, 7);
+        int winSize = 6;
+        int fftSize = (int)Math.pow(2, 9);
         operator.orderAxisDrawing(windowWidth, windowHeight, sampleRate, fftSize, winSize, reader.getFileDuration());
         Processor processor = new Processor(sampleRate, fftSize, winSize, func, this, true, false);
 //        ranges.setAxesRanges(sampleRate, 405, reader.getSamplesCount()/processor.getWinSizeInSamples(), 20);
@@ -74,54 +74,7 @@ public class Drawer extends Application implements FFTDataListener {
 
     @Override
     public void onDataComputed(int[] timeValues, int[] freqValues, SparseIntArray fftDataset, int magMin, int magMax) {
-//        System.out.println(magMax);
-//        System.out.println(timeValues.length);
-//        System.out.println(freqValues.length);
-//        System.out.println(fftDataset.size());
-
         operator.orderWaterfallDrawing(magMin,magMax,timeValues,freqValues,fftDataset);
-//        ranges.setGrad(magMin, magMax, Color.LIME, Color.RED);
-//        ArrayList<Node> nodeList = new ArrayList<>(drawAxis(windowWidth, windowHeight, (short) 1));
-//        nodeList.add(drawWaterfall(windowWidth, windowHeight));
-//        root.getChildren().addAll(nodeList);
-
-//        Canvas canvas = new Canvas(windowWidth,windowHeight);
-//        GraphicsContext gc = canvas.getGraphicsContext2D();
-//        drawShapes(gc);
-//        root.getChildren().add(canvas);
-    }
-
-
-
-    private void drawInitialChart(Canvas chartCanvas, int xOffset, int yOffset) {
-        //Firstly, we need to detect x and y axes resolution
-
-    }
-    //In this method we also set some crucial parameters to draw the waterfall itself (with the gradient) right after the axes and designations
-    //Global Ranges instance holds them all.
-
-
-    private void drawShapes(GraphicsContext gc) {
-        gc.setFill(Color.GREEN);
-        gc.setStroke(Color.BLUE);//*
-        gc.setLineWidth(5);//*
-        gc.strokeLine(40, 10, 10, 40);//*
-        gc.fillOval(10, 60, 30, 30);
-        gc.strokeOval(60, 60, 30, 30);
-        gc.fillRoundRect(110, 60, 30, 30, 10, 10);
-        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
-        gc.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
-        gc.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
-        gc.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
-        gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
-        gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
-        gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-        gc.fillPolygon(new double[]{10, 40, 10, 40},
-                new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolygon(new double[]{60, 90, 60, 90},
-                new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolyline(new double[]{110, 140, 110, 140},
-                new double[]{210, 210, 240, 240}, 4);
     }
 
 }
