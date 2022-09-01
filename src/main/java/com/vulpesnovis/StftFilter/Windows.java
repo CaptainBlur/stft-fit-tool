@@ -10,7 +10,6 @@ public class Windows {
             double deltaTheta = 2*Math.PI * i / (size - 1);
             double val = .5 - .5 * Math.cos(deltaTheta);
             result[i] = val * window[i];
-            System.out.println(val);
         }
         return result;
     }
@@ -21,7 +20,6 @@ public class Windows {
             double deltaTheta = 2*Math.PI * i / (size - 1);
             double val = .54 - .46 * Math.cos(deltaTheta);
             result[i] = val * window[i];
-            System.out.println(val);
         }
         return result;
     }

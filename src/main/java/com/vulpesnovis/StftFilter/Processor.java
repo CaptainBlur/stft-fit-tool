@@ -8,9 +8,9 @@ import java.util.Arrays;
 
 public class Processor {
     private final int sampleRate; //inHz
-    private short winSize = 20; //in mS
-    private String func = "rect";
-    private int fftSize = 256;
+    private short winSize; //in mS
+    private String func;
+    private int fftSize;
     private final float winSizeinSamples;
 
     //I'm introducing this block of code, because we cannot just pass fft result of entire audio file, to Output
@@ -30,14 +30,13 @@ public class Processor {
      */
     public Processor(int sampleRate, int fftSize, int winSize, String func, FFTDataListener listener, boolean dbOutput, boolean oneWindow){
         this.sampleRate = sampleRate;
-        if (func != null) this.func = func;
-        if(fftSize != -1) this.fftSize = fftSize;
-        if (winSize != -1) this.winSize = (short)winSize;
+        this.func = func;
+        this.fftSize = fftSize;
+        this.winSize = (short)winSize;
         givenListener = listener;
         this.dbOutput = dbOutput;
         this.oneWindow = oneWindow;
         winSizeinSamples = ((float)winSize/1000) / (1/(float)sampleRate);
-        System.out.println(this.func);
     }
 
     /**

@@ -32,7 +32,6 @@ public class Wav_reader {
         } catch (IOException | WavFileException e) {
             System.out.println("Please choose .wav file");
             System.exit(1);}
-        wavFile.display();
         System.out.println("");
     }
 
@@ -44,7 +43,6 @@ public class Wav_reader {
         } catch (IOException | WavFileException e) {
             System.out.println("Please choose .wav file");
             System.exit(1);}
-        wavFile.display();
         System.out.println("");
     }
 
@@ -74,4 +72,5 @@ public class Wav_reader {
     public int getFileDuration(){
         return (int)((float)wavFile.getNumFrames()/(float)wavFile.getSampleRate()*1000);
     }
+    public void printInfo(){wavFile.display();}
 }
