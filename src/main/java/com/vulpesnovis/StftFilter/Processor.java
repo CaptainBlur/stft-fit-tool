@@ -8,10 +8,10 @@ import java.util.Arrays;
 
 public class Processor {
     private final int sampleRate; //inHz
-    private short winSize; //in mS
-    private String func;
-    private int fftSize;
+    private final short winSize; //in mS
+    private final int fftSize;
     private final float winSizeinSamples;
+    private final String func;
 
     //I'm introducing this block of code, because we cannot just pass fft result of entire audio file, to Output
     //It will be too much for an array, especially when audio file is relatively long
@@ -49,6 +49,7 @@ public class Processor {
      * @param buffer array of decoded samples of the whole source file (or whatever we had in input)
      */
     public void process (double[] buffer){
+
         int winTotal = buffer.length / (int) winSizeinSamples;
         int samplesCount = 0; //total samples counter through all windows
         short timeOfInput = 0; //elapsed time in input signal
@@ -63,7 +64,7 @@ public class Processor {
         double magMax = -170;
         double magMin = 0;
 
-        for (int i = 0; i < winTotal; i++) {//cycle for each window in the whole output sequence
+        for (int i = skipIdle(buffer); i < winTotal; i++) {//cycle for each window in the whole output sequence
             if (oneWindow) i = buffer.length/(int)winSizeinSamples;
 
             DoubleFFT_1D transformer = new DoubleFFT_1D(fftSize*2);
@@ -71,7 +72,12 @@ public class Processor {
             double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeinSamples)];
             System.arraycopy(buffer, samplesCount, window, 0, (int)winSizeinSamples);
 
-            System.arraycopy(Windows.applyHann(window), 0, windowNResult, 0, window.length);
+            switch(func){
+                case ("rect") -> System.arraycopy(window, 0, windowNResult, 0, window.length);
+                case ("hann") -> System.arraycopy(Windows.applyHann(window), 0, windowNResult, 0, window.length);
+                case ("hamming") -> System.arraycopy(Windows.applyHamming(window), 0, windowNResult, 0, window.length);
+                case ("blackman") -> System.arraycopy(Windows.applyBlackman(window), 0, windowNResult, 0, window.length);
+            }
 
             transformer.realForward(windowNResult);
 //            transformer.realForward(windowNResult);
@@ -88,7 +94,7 @@ public class Processor {
                     double ref = 470; //dBFS reference value measured on pure sine wave with no window function applied
                     mag = 20 * Math.log10(mag/ref);
                 }
-                //We need to code to values into one key int
+                //These two values coded into one key
                 //Number of bin consists of 4 digits, and number of windows is 4 digits either (let's assume it's our input file limitation)
 
                 DecimalFormat df = new DecimalFormat("0000");
@@ -98,21 +104,20 @@ public class Processor {
 
                 arrayFreqValues[k] = (int)(j*100);
                 if (re==0&im==0) mag=magMin;
-                if (magMax < mag) magMax = mag;
+                if (magMax < mag & mag != 0) magMax = mag;
                 if (magMin > mag) magMin=mag;
 
-                if (replaceBroken){
+                if (replaceBroken & k>1){
                     String memKey = df.format(i) + df.format(k-2);
                     String prevKey = df.format(i) + df.format(k-1);
                     int prevMag = (int)((fftDataset.get(Integer.parseInt(memKey))+mag)/2);
                     fftDataset.put(Integer.parseInt(prevKey), prevMag);
-                    if (i==0) System.out.println("Freaking hell. Value approximated again. Key: " + df.format(k-1));
+                    if (i==0) System.out.println("\u001B[34mFreaking hell. Value approximated again. Key: " + df.format(k-1 + ". Something wrong with ur input") + "\u001B[0m");
                     replaceBroken = false;
                 }
                 replaceBroken = re == 0 & im == 0;
 
                 fftDataset.append(Integer.parseInt(key), (int)mag);
-//                if (i==0&k==0)System.out.println(mag + " " + j + " " + timeOfInput);
 
                 j+=fftStep;
             }
@@ -123,5 +128,16 @@ public class Processor {
         }
         givenListener.onDataComputed(arrayTimeValues, arrayFreqValues, fftDataset, (int)magMin, (int)magMax);
     }
-
+    //This method takes control over the data processing, to skip the initial amount of zero values of the input dataset.
+    //And returns value for the window counter to start real processing
+    private int skipIdle(double[] buffer){
+        int start=0;
+        for (int i = 0; i < buffer.length; i++) {
+            if (buffer[i]!=0){
+                start = Math.ceilDiv(i, (int)winSizeinSamples);
+                break;
+            }
+        }
+        return start-1;
+    }
 }

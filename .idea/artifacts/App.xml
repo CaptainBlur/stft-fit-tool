@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="App">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="App.jar">
+      <element id="archive" name="stft_fit_tool_main.jar">
+        <element id="module-output" name="stft-fit-tool.main" />
+      </element>
+    </root>
+  </artifact>
+</component>

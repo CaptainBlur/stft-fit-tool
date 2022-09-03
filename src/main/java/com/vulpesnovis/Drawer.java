@@ -65,6 +65,7 @@ public class Drawer extends Application implements FFTDataListener, Runnable{
         Processor processor = new Processor(sampleRate, fftSize, winSize, Args.getValString(initialArgs, "WINDOW_FUNC"), this, true, false);
         processor.process(reader.getDecodedInput(winSize,-1));
 
+        int asf = 0;
         primaryStage.show();
 //        System.out.println(primaryStage.);
 

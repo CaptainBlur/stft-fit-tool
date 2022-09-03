@@ -1,5 +1,7 @@
 package com.vulpesnovis;
 
+import com.vulpesnovis.StftFilter.Windows;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -70,7 +72,7 @@ public class ConsoleHandler {
         if (reader.ready()) {
             int input;
             try {
-                input = Integer.parseInt(reader.readLine());
+                input = (Integer.parseInt(reader.readLine()));
             } catch (NumberFormatException e) {
                 input=0;
             }
@@ -126,13 +128,17 @@ public class ConsoleHandler {
         else if (desire==WINDOW_LENGTH)
             System.out.println("Enter desired window length in milliseconds.\n" +
                     "Enter \"q\" to get back");
-        else System.out.println("""
-                    Enter number of desired window function from the list below:
-                    1) Rectangular;
-                    2) Hann;
-                    3) Hamming;
-                    
-                    Enter "q" to get back.""");
+        else{
+            System.out.println("Enter number of desired window function from the list below:");
+            String[] fancyNames = Windows.getFancyNames();
+            for (int i = 0; i < fancyNames.length; i++) {
+                String name = fancyNames[i];
+                System.out.print("\n" + (i+1) + ") " + name);
+                if (i!=fancyNames.length-1) System.out.print(";");
+                else System.out.print(".");
+            }
+            System.out.println("\n\nEnter \"q\" to get back.");
+        }
     }
     private static void winParamsExec() throws IOException {
         if (reader.ready()) {
@@ -198,28 +204,14 @@ public class ConsoleHandler {
                 } catch (NumberFormatException e) {
                     inputInt=0;
                 }
-                switch (inputInt){
-                    case (0) -> System.out.println("It must be non-zero numeric value.");
-                    case (1) -> {
-                        display = WINDOW_FUNC;
-                        desire = WINDOW_FUNC_ENTERED;
-                        Args.replaceVal(args, "WINDOW_FUNC", "rect");
-                        listener.changeOne(args);
-                    }
-                    case (2) -> {
-                        display = WINDOW_FUNC;
-                        desire = WINDOW_FUNC_ENTERED;
-                        Args.replaceVal(args, "WINDOW_FUNC", "hann");
-                        listener.changeOne(args);
-                    }
-                    case (3) -> {
-                        display = WINDOW_FUNC;
-                        desire = WINDOW_FUNC_ENTERED;
-                        Args.replaceVal(args, "WINDOW_FUNC", "hamming");
-                        listener.changeOne(args);
-                    }
-                    default -> System.out.println("Stop fooling around.");
+                if (inputInt==0) System.out.println("It must be non-zero numeric value.");
+                else if (inputInt>0 & inputInt<=Windows.getFancyNames().length) {
+                    display = WINDOW_FUNC;
+                    desire = WINDOW_FUNC_ENTERED;
+                    Args.replaceVal(args, "WINDOW_FUNC", Windows.getFuncNames()[inputInt-1]);
+                    listener.changeOne(args);
                 }
+                else System.out.println("Stop fooling around.");
             }
         }
     }

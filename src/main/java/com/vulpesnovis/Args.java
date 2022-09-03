@@ -1,5 +1,8 @@
 package com.vulpesnovis;
 
+import com.vulpesnovis.StftFilter.Processor;
+import com.vulpesnovis.StftFilter.Windows;
+
 enum Args{
     W_WIDTH("--width", "-W"),
     W_HEIGHT("--height", "-H"),
@@ -20,12 +23,42 @@ enum Args{
         }
         return false;
     }
+    // todo Self check implemented here
     private void setVal(String val){
-        this.val = val;
-        assigned = true;
+        int valInt;
+        boolean passed=false;
+
+        try {valInt = Integer.parseInt(val);
+        } catch (NumberFormatException e){
+            valInt = 0;
+        }
+        switch (name()){
+            case ("W_WIDTH"), ("W_HEIGHT"), ("WINDOW_LENGTH") -> {
+                if (valInt>0) passed=true;
+            }
+            case ("FFT_SIZE") -> {
+                if (valInt>5 & valInt<13) passed=true;
+            }
+            case ("WINDOW_FUNC") -> {
+                for (String func: Windows.getFuncNames()) {
+                    if (func.matches(val)){
+                        passed=true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (passed){
+            this.val = val;
+            assigned=true;
+        }
+        else {
+            System.out.println("\u001B[33mValue of the parameter \"" + name() + "\" was denied. Passing default val.\u001B[0m");
+        }
+
     }
-    public String getValString(){return val;};
-    public int getValInt(){return Integer.parseInt(val);};
+    private String getValString(){return val;};
     @Override
     public String toString() {
         return name() + "=" + getValString() + ", ";

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="App" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Smoothly working with Hann and Hamming windows">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" afterDir="false" />
+    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Proper runtime console input added. No-arguments startup (with defaults) enabled">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/App.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,15 +72,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/valdo/IdeaProjects/stft-fit-tool/javafx-sdk-18.0.2&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/home/valdo/Desktop",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/com/vulpesnovis" />
@@ -103,6 +107,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.vulpesnovis.Main" />
       <module name="stft-fit-tool.main" />
+      <option name="PROGRAM_PARAMETERS" value="-w blackman" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -153,7 +158,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661862911112</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Proper runtime console input added. No-arguments startup (with defaults) enabled">
+      <created>1662051037048</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1662051037048</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,7 +183,8 @@
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Basic functionality achieved. Working with insufficient issues" />
     <MESSAGE value="Smoothly working with Hann and Hamming windows" />
-    <option name="LAST_COMMIT_MESSAGE" value="Smoothly working with Hann and Hamming windows" />
+    <MESSAGE value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -182,9 +195,9 @@
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java</url>
-          <line>206</line>
-          <option name="timeStamp" value="94" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="119" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -197,5 +210,8 @@
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/stft_fit_tool$Main.ic" NAME="Main Coverage Results" MODIFIED="1662152013571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
