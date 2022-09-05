@@ -8,7 +8,9 @@ enum Args{
     W_HEIGHT("--height", "-H"),
     FFT_SIZE("--fftSize", "-s"),
     WINDOW_LENGTH("--winLength", "-l"),
-    WINDOW_FUNC("--win", "-w");
+    WINDOW_FUNC("--win", "-w"),
+    FILE_MODE("--file", "-F"),
+    AUDIO_PATH;
 
     private final String[] names;
     private String val;
@@ -37,7 +39,7 @@ enum Args{
                 if (valInt>0) passed=true;
             }
             case ("FFT_SIZE") -> {
-                if (valInt>5 & valInt<13) passed=true;
+                if (valInt>4 & valInt<14 | valInt==0) passed=true;
             }
             case ("WINDOW_FUNC") -> {
                 for (String func: Windows.getFuncNames()) {
@@ -47,6 +49,10 @@ enum Args{
                     }
                 }
             }
+            case ("FILE_MODE") -> {
+                if (val.matches("default") | val.matches("one") | val.matches("multiple")) passed=true;
+            }
+            case ("AUDIO_PATH") -> passed=true;
         }
 
         if (passed){

@@ -9,15 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Proper runtime console input added. No-arguments startup (with defaults) enabled">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/App.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,17 +74,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "/home/valdo/Desktop",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/valdo/Desktop&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/com/vulpesnovis" />
@@ -107,7 +109,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.vulpesnovis.Main" />
       <module name="stft-fit-tool.main" />
-      <option name="PROGRAM_PARAMETERS" value="-w blackman" />
+      <option name="PROGRAM_PARAMETERS" value="-w blackman -s 10 -l 15 -F multiple" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -165,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662051037048</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added">
+      <created>1662204739404</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1662204739405</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -184,20 +193,16 @@
     <MESSAGE value="Basic functionality achieved. Working with insufficient issues" />
     <MESSAGE value="Smoothly working with Hann and Hamming windows" />
     <MESSAGE value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
-    <option name="LAST_COMMIT_MESSAGE" value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
+    <MESSAGE value="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java</url>
-          <line>284</line>
+          <line>297</line>
           <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="119" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -50,22 +50,33 @@ public class JFXOperator {
     }
 
 
-    public void orderAxisDrawing(int windowWidth, int windowHeight, int sampleRate, int fftSize, int windowSize, int fileDuration){
+    public void orderAxisDrawing(int windowWidth, int windowHeight, int sampleRate, int windowSize, int fileDuration){
         ranges.setWindowSize(windowWidth, windowHeight);
-        buffer.setTransformParams(sampleRate, fftSize, fileDuration / windowSize, windowSize);
+        buffer.setTransformParams(sampleRate, fileDuration / windowSize, windowSize);
         root.getChildren().addAll(drawAxis(windowWidth, windowHeight, (short) 1));
+        ranges.defineWfSize();
+
     }
-    public void orderAxisDrawing(int sampleRate, int fftSize, int windowSize, int fileDuration){
-        buffer.setTransformParams(sampleRate, fftSize, fileDuration / windowSize, windowSize);
+    public void orderAxisDrawing(int sampleRate, int windowSize, int fileDuration){
+        buffer.setTransformParams(sampleRate, fileDuration / windowSize, windowSize);
         root.getChildren().addAll(drawAxis(ranges.windowWidth, ranges.windowHeight, (short) 1));
     }
 
-    public void orderWaterfallDrawing(int magMin, int magMax, int[] timeValues, int[] freqValues, SparseIntArray fftDataset) {
+    public void orderWaterfallDrawing(int fftSize, int magMin, int magMax, int[] timeValues, int[] freqValues, SparseIntArray fftDataset) {
+        buffer.setFftSize(fftSize);
         buffer.setMagnitudes(magMin, magMax);
         buffer.setData(timeValues, freqValues, fftDataset);
         root.getChildren().addAll(drawWaterfall());
     }
-    public void orderDummy(){
+
+    public int getOptimalFftSizeMultiplier(){
+        int fftSize=1;
+        int interim = 0;
+        while (interim <1) {
+            fftSize++;
+            interim = Math.floorDiv((int) Math.pow(2, fftSize), ranges.wfHeight);
+        }
+        return fftSize;
     }
     public void clearGroup(){root.getChildren().clear();}
 
@@ -264,13 +275,15 @@ public class JFXOperator {
             this.startCol = startCol;
             this.endCol = endCol;
         }
+        private void defineWfSize(){
+            wfWidth = (int) (wfAbscissaEnd - wfAbscissaStart);
+            wfHeight = (int) (wfOrdinateEnd - wfOrdinateStart);
+        }
 
         //We need this method to define resolution of each pixel
         private void defineWfPixelRes() {
             double xInterim = (float) (wfAbscissaEnd - wfAbscissaStart) / (float) buffer.winCount;
             double yInterim = (float) (wfOrdinateEnd - wfOrdinateStart) / (float) buffer.fftSize;
-            wfWidth = (int) (wfAbscissaEnd - wfAbscissaStart);
-            wfHeight = (int) (wfOrdinateEnd - wfOrdinateStart);
 
             if (xInterim >= 1) {
                 timeSampling = new int[buffer.winCount + 1];
@@ -345,9 +358,11 @@ public class JFXOperator {
         private int[] freqValues;
         private SparseIntArray fftDataset;
 
-        private void setTransformParams(int SR, int fftSize, int winCount, int winSize) {
+        private void setFftSize(int multiplier){
+            this.fftSize = (int)Math.pow(2, multiplier);
+        }
+        private void setTransformParams(int SR, int winCount, int winSize) {
             sr = SR;
-            this.fftSize = fftSize;
             this.winCount = winCount;
             this.winSize = winSize;
         }

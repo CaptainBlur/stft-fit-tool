@@ -5,6 +5,7 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Processor {
     private final int sampleRate; //inHz
@@ -23,17 +24,17 @@ public class Processor {
 
     /**
      *
-     * @param fftSize number of samples (bins) in the output array. Put -1 as the value for default 256
-     * @param winSize width of the STFT window in mS. Pass -1 for a default value which is 20.
+     * @param fftSize number of samples (bins) in the output array, given to the power of two.
+     * @param winSize width of the STFT window in mS.
      * @param dbOutput present output values normalized by dBFS.
      * @param oneWindow use this to process only one first window. For testing purposes.
      */
     public Processor(int sampleRate, int fftSize, int winSize, String func, FFTDataListener listener, boolean dbOutput, boolean oneWindow){
         this.sampleRate = sampleRate;
-        this.func = func;
-        this.fftSize = fftSize;
+        this.func = Objects.requireNonNull(func);
+        this.fftSize = (int)Math.pow(2,fftSize);
         this.winSize = (short)winSize;
-        givenListener = listener;
+        givenListener = Objects.requireNonNull(listener);
         this.dbOutput = dbOutput;
         this.oneWindow = oneWindow;
         winSizeinSamples = ((float)winSize/1000) / (1/(float)sampleRate);
@@ -42,7 +43,7 @@ public class Processor {
     /**
      * JTransforms processing library is just brilliant
      * (but I don't think there's some kinda magic involved).
-     * It somehow detects the Nyquist frequency of the source and makes the whole output plot up to it.
+     * It somehow detects the Nyquist frequency of the source and makes the whole output calculation up to it.
      * Meanwhile, "n" argument of the constructor is our desired FFT size in bins.
      * And we just pass our windows one after another, to make a snapshot of the whole input array
      *
@@ -72,12 +73,7 @@ public class Processor {
             double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeinSamples)];
             System.arraycopy(buffer, samplesCount, window, 0, (int)winSizeinSamples);
 
-            switch(func){
-                case ("rect") -> System.arraycopy(window, 0, windowNResult, 0, window.length);
-                case ("hann") -> System.arraycopy(Windows.applyHann(window), 0, windowNResult, 0, window.length);
-                case ("hamming") -> System.arraycopy(Windows.applyHamming(window), 0, windowNResult, 0, window.length);
-                case ("blackman") -> System.arraycopy(Windows.applyBlackman(window), 0, windowNResult, 0, window.length);
-            }
+            System.arraycopy(Windows.applyWindow(window, func), 0, windowNResult, 0, window.length);
 
             transformer.realForward(windowNResult);
 //            transformer.realForward(windowNResult);
@@ -138,6 +134,8 @@ public class Processor {
                 break;
             }
         }
+        if (start==0)
+            throw new NullPointerException("Input buffer is null");
         return start-1;
     }
 }

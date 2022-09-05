@@ -1,49 +1,108 @@
 package com.vulpesnovis.WavFile;
 
-import javax.swing.*;
-import java.awt.*;
+import com.vulpesnovis.Drawer;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Wav_reader {
     private WavFile wavFile;
+    private Stage dialogStage;
+    private final FileChooser fileChooser = new FileChooser();
+    private File startDirectory;
     private File path = null;
+    private File newPath = null;
+    private List<File> files;
+    private int filesSize = -1;
 
-    private static int readOffset = 0;
+    private int readOffset = 0;
+
+    private final String ANSI_RESET = "\u001B[0m";
+    private final String ANSI_YELLOW = "\u001B[33m";
+    public final String ANSI_RED = "\u001B[31m";
     public Wav_reader(){
-    }
-
-    private void readFile(){
-        FileDialog fd = new FileDialog(new JFrame());
-        fd.setDirectory("~/");
-        fd.setVisible(true);
-
         try {
-            path = new File(fd.getFile());
-        } catch (NullPointerException e) {
-            System.out.println("File not selected");
-            System.exit(1);
+            startDirectory = new File(".").getCanonicalFile();
+        } catch (IOException e) {
+            startDirectory = new File("/");
         }
 
-        System.out.println(path.getAbsolutePath());
-
-        try {
-            wavFile = WavFile.openWavFile(path);
-        } catch (IOException | WavFileException e) {
-            System.out.println("Please choose .wav file");
-            System.exit(1);}
-        System.out.println("");
+        fileChooser.setTitle(Drawer.APP_NAME);
+        fileChooser.setInitialDirectory(startDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Audio Files", "*.wav"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
     }
 
     public void readDefault(){
-        path = new File("audio.wav");
+        try {
+            path = new File("audio.wav").getCanonicalFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         try {
             wavFile = WavFile.openWavFile(path);
         } catch (IOException | WavFileException e) {
-            System.out.println("Please choose .wav file");
-            System.exit(1);}
-        System.out.println("");
+            System.out.println(ANSI_RED + "Cannot read default \"audio.wav\" file in the root directory." + ANSI_RESET);
+            System.exit(1);
+        }
+        System.out.println(ANSI_YELLOW + "Reading default file." + ANSI_RESET);
+    }
+    public void readPrev(){
+        try {
+            wavFile = WavFile.openWavFile(path);
+        } catch (IOException | WavFileException e) {
+            System.out.println(ANSI_RED + "Cannot read previous file." + ANSI_RESET);
+            System.exit(1);
+        }
+        System.out.println(ANSI_YELLOW + "Selecting last valid file.\n" + ANSI_RESET);
+    }
+
+    public void readOne(int fileNumber){
+        if (fileNumber==-1) {
+            dialogStage = new Stage();
+            dialogStage.show();
+            dialogStage.hide();
+
+            newPath = fileChooser.showOpenDialog(dialogStage);
+            dialogStage.close();
+        } else newPath = files.get(fileNumber);
+
+        if (newPath==null){
+            System.out.println(ANSI_YELLOW + "\nNo file selected.\n" + ANSI_RESET);
+            if (path==null) readDefault();
+            else readPrev();
+            return;
+        }
+
+        try {
+            wavFile = WavFile.openWavFile(newPath);
+        } catch (IOException | WavFileException e) {
+            System.out.println(ANSI_YELLOW + "\nWrong file extension.\n" + ANSI_RESET);
+            if (path==null) readDefault();
+            else readPrev();
+            return;
+            }
+
+        path = newPath;
+        startDirectory = path.getParentFile();
+    }
+
+    public void setList() {
+        dialogStage = new Stage();
+        dialogStage.show();
+        dialogStage.hide();
+
+        files = fileChooser.showOpenMultipleDialog(dialogStage);
+        if (files == null) filesSize = -1;
+        else filesSize = files.size();
+        dialogStage.close();
     }
 
     public double[] getDecodedInput(int winSize, int winCount){
@@ -65,12 +124,12 @@ public class Wav_reader {
         readOffset+=numFrames;
         return buffer;
     }
-
     public int getSampleRate(){
         return (int)wavFile.getSampleRate();
     }
     public int getFileDuration(){
         return (int)((float)wavFile.getNumFrames()/(float)wavFile.getSampleRate()*1000);
     }
-    public void printInfo(){wavFile.display();}
+    public String getFilePath(){return path.getAbsolutePath();}
+    public int getFilesSize(){return filesSize;}
 }
