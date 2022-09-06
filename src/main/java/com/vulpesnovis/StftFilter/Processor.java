@@ -8,36 +8,49 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Processor {
-    private final int sampleRate; //inHz
-    private final short winSize; //in mS
-    private final int fftSize;
-    private final float winSizeinSamples;
+    private int sampleRate; //inHz
+    private short winSize; //in mS
+    private int fftSize;
+    private float winSizeInSamples;
     private final String func;
 
     //I'm introducing this block of code, because we cannot just pass fft result of entire audio file, to Output
     //It will be too much for an array, especially when audio file is relatively long
     //So, we need to split the entire fft result into several groups of windows
 
-    private final FFTDataListener givenListener;
-    private final boolean dbOutput;
-    private final boolean oneWindow;
+    private CompleteDataListener completeListener;
+    private FunctionTestListener functionListener;
+    private NewWindowListener windowListener;
+    private boolean dbOutput;
+    private int windowSize;
 
     /**
      *
      * @param fftSize number of samples (bins) in the output array, given to the power of two.
      * @param winSize width of the STFT window in mS.
      * @param dbOutput present output values normalized by dBFS.
-     * @param oneWindow use this to process only one first window. For testing purposes.
      */
-    public Processor(int sampleRate, int fftSize, int winSize, String func, FFTDataListener listener, boolean dbOutput, boolean oneWindow){
+    public Processor(int sampleRate, int fftSize, int winSize, String func, CompleteDataListener listener, boolean dbOutput){
         this.sampleRate = sampleRate;
         this.func = Objects.requireNonNull(func);
         this.fftSize = (int)Math.pow(2,fftSize);
         this.winSize = (short)winSize;
-        givenListener = Objects.requireNonNull(listener);
+        completeListener = Objects.requireNonNull(listener);
         this.dbOutput = dbOutput;
-        this.oneWindow = oneWindow;
-        winSizeinSamples = ((float)winSize/1000) / (1/(float)sampleRate);
+        winSizeInSamples = ((float)winSize/1000) / (1/(float)sampleRate);
+    }
+    public Processor(int sampleRate, int fftSize, String func, NewWindowListener listener, boolean dbOutput){
+        this.sampleRate = sampleRate;
+        this.func = Objects.requireNonNull(func);
+        this.fftSize = (int)Math.pow(2,fftSize);
+        windowListener = Objects.requireNonNull(listener);
+        this.dbOutput = dbOutput;
+    }
+    public Processor(String func, FunctionTestListener listener, int windowSize, boolean dbOutput){
+        this.func = Objects.requireNonNull(func);
+        functionListener = Objects.requireNonNull(listener);
+        this.windowSize = windowSize;
+        this.dbOutput = dbOutput;
     }
 
     /**
@@ -51,7 +64,7 @@ public class Processor {
      */
     public void process (double[] buffer){
 
-        int winTotal = buffer.length / (int) winSizeinSamples;
+        int winTotal = buffer.length / (int) winSizeInSamples;
         int samplesCount = 0; //total samples counter through all windows
         short timeOfInput = 0; //elapsed time in input signal
         float fftStep = (float)(sampleRate/2)/fftSize;
@@ -66,12 +79,11 @@ public class Processor {
         double magMin = 0;
 
         for (int i = skipIdle(buffer); i < winTotal; i++) {//cycle for each window in the whole output sequence
-            if (oneWindow) i = buffer.length/(int)winSizeinSamples;
 
             DoubleFFT_1D transformer = new DoubleFFT_1D(fftSize*2);
-            double[] window = new double [(int)winSizeinSamples];
-            double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeinSamples)];
-            System.arraycopy(buffer, samplesCount, window, 0, (int)winSizeinSamples);
+            double[] window = new double [(int)winSizeInSamples];
+            double[] windowNResult = new double[Integer.max(fftSize * 2, (int) winSizeInSamples)];
+            System.arraycopy(buffer, samplesCount, window, 0, (int)winSizeInSamples);
 
             System.arraycopy(Windows.applyWindow(window, func), 0, windowNResult, 0, window.length);
 
@@ -108,7 +120,7 @@ public class Processor {
                     String prevKey = df.format(i) + df.format(k-1);
                     int prevMag = (int)((fftDataset.get(Integer.parseInt(memKey))+mag)/2);
                     fftDataset.put(Integer.parseInt(prevKey), prevMag);
-                    if (i==0) System.out.println("\u001B[34mFreaking hell. Value approximated again. Key: " + df.format(k-1 + ". Something wrong with ur input") + "\u001B[0m");
+                    if (i==0) System.out.println("\u001B[34mFreaking hell. Value approximated again. Key: " + df.format(k-1) + ". Something wrong with ur input" + "\u001B[0m");
                     replaceBroken = false;
                 }
                 replaceBroken = re == 0 & im == 0;
@@ -118,11 +130,75 @@ public class Processor {
                 j+=fftStep;
             }
 
-            if (!oneWindow) arrayTimeValues[i] = timeOfInput;
+            arrayTimeValues[i] = timeOfInput;
             timeOfInput += winSize;
-            samplesCount += winSizeinSamples;
+            samplesCount += winSizeInSamples;
         }
-        givenListener.onDataComputed(arrayTimeValues, arrayFreqValues, fftDataset, (int)magMin, (int)magMax);
+        completeListener.onDataComputed(arrayTimeValues, arrayFreqValues, fftDataset, (int)magMin, (int)magMax);
+    }
+    public void processSingle(double[] buffer){
+        if (buffer[0]==0){
+            windowListener.onIdlePassed();
+            return;
+        }
+
+        int winSizeInSamples = buffer.length;
+        float fftStep = (float)(sampleRate/2)/fftSize;
+
+        SparseIntArray fftSnapshot = new SparseIntArray();
+        double magMax = -170;
+        double magMin = 0;
+
+
+        DoubleFFT_1D transformer = new DoubleFFT_1D(fftSize*2);
+        double[] windowNResult = new double[Integer.max(fftSize * 2, winSizeInSamples)];
+
+        System.arraycopy(Windows.applyWindow(buffer, func), 0, windowNResult, 0, buffer.length);
+
+        transformer.realForward(windowNResult);
+        float j = fftStep; //iterator for frequency val in output array (key)
+
+        //cycle for each bin in every single window transform.
+        boolean replaceBroken = false;
+        for (int k = 1; k < fftSize; k++) {
+            double re = windowNResult[2*k];
+            double im = windowNResult[2*k+1];
+            double mag = Math.sqrt(re*re + im*im);
+
+            if (dbOutput){//writing array in absolute values
+                double ref = 470; //dBFS reference value measured on pure sine wave with no window function applied
+                mag = 20 * Math.log10(mag/ref);
+            }
+
+            int key = (int)(j*100);
+
+            if (re==0&im==0) mag=magMin;
+            if (magMax < mag & mag != 0) magMax = mag;
+            if (magMin > mag) magMin=mag;
+
+            if (replaceBroken & k>1){
+                int memKey = (int)((j-2*fftStep)*100);
+                int prevKey = (int)((j-fftStep)*100);
+                int prevMag = (int)((fftSnapshot.get(memKey)+mag)/2);
+                fftSnapshot.put(prevKey, prevMag);
+                System.out.println("\u001B[34mFreaking hell. Value approximated again. Freq: " + prevKey + ". Something wrong with ur input" + "\u001B[0m");
+                replaceBroken = false;
+            }
+            replaceBroken = re == 0 & im == 0;
+
+            fftSnapshot.append(key, (int)mag);
+
+            j+=fftStep;
+        }
+
+        fftSnapshot.put(0,0);
+        windowListener.onWindowComputed(fftSnapshot);
+    }
+    public void processFunction (){
+        double[] window = new double[windowSize];
+        Arrays.fill(window, 1);
+
+        functionListener.onRawFunctionComputed(Windows.applyWindow(window, func));
     }
     //This method takes control over the data processing, to skip the initial amount of zero values of the input dataset.
     //And returns value for the window counter to start real processing
@@ -130,7 +206,7 @@ public class Processor {
         int start=0;
         for (int i = 0; i < buffer.length; i++) {
             if (buffer[i]!=0){
-                start = Math.ceilDiv(i, (int)winSizeinSamples);
+                start = Math.ceilDiv(i, (int)winSizeInSamples);
                 break;
             }
         }

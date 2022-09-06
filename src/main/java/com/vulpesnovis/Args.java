@@ -8,7 +8,7 @@ enum Args{
     W_HEIGHT("--height", "-H"),
     FFT_SIZE("--fftSize", "-s"),
     WINDOW_LENGTH("--winLength", "-l"),
-    WINDOW_FUNC("--win", "-w"),
+    WINDOW_FUNC("--func", "-f"),
     FILE_MODE("--file", "-F"),
     AUDIO_PATH;
 
@@ -25,7 +25,7 @@ enum Args{
         }
         return false;
     }
-    // todo Self check implemented here
+    //Self check implemented here
     private void setVal(String val){
         int valInt;
         boolean passed=false;
@@ -60,7 +60,7 @@ enum Args{
             assigned=true;
         }
         else {
-            System.out.println("\u001B[33mValue of the parameter \"" + name() + "\" was denied. Passing default val.\u001B[0m");
+            System.out.println("\u001B[33mValue of the parameter \"" + name() + "\" has denied. Passing default val.\u001B[0m");
         }
 
     }

@@ -80,6 +80,10 @@ public class JFXOperator {
     }
     public void clearGroup(){root.getChildren().clear();}
 
+    public int getWFWidth(){return (int)(ranges.wfAbscissaEnd - ranges.wfAbscissaStart);}
+    public void orderFunctionDrawing(double[] window){
+        root.getChildren().add(drawFunction(window));
+    }
     private @NotNull List<Node> drawAxis(int chartCanvasX, int chartCanvasY, short interfaceScaleFactor) {
         ArrayList<Node> nodeList = new ArrayList<>();
         Canvas axisCanvas = new Canvas(chartCanvasX, chartCanvasY);
@@ -239,6 +243,26 @@ public class JFXOperator {
         //Basically, it occupies the space given by the previous method, to draw the gradient
 
         return nodeList;
+    }
+
+    private Node drawFunction(double[] window){
+        int yMin = (int)ranges.wfOrdinateStart;
+        int yMax = (int)ranges.wfOrdinateEnd;
+
+        int chartCanvasX = ranges.windowWidth;
+        int chartCanvasY = ranges.windowHeight;
+        Canvas functionCanvas = new Canvas(chartCanvasX, chartCanvasY);
+        GraphicsContext functionGC = functionCanvas.getGraphicsContext2D();
+
+        functionGC.setFill(Color.ORANGERED);
+        int xCoord = (int)ranges.wfAbscissaStart;
+        for (int i = 0; i < window.length; i++) {
+            int height = (int) (Math.abs(yMax-yMin) * window[i]);
+            functionGC.fillRect(xCoord , yMax, 1, -height);
+            xCoord++;
+        }
+
+        return functionCanvas;
     }
 
     //Basically, it used to transfer some parameters to the "draw..." methods

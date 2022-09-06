@@ -15,7 +15,6 @@ public class Wav_reader {
     private final FileChooser fileChooser = new FileChooser();
     private File startDirectory;
     private File path = null;
-    private File newPath = null;
     private List<File> files;
     private int filesSize = -1;
 
@@ -32,13 +31,13 @@ public class Wav_reader {
         }
 
         fileChooser.setTitle(Drawer.APP_NAME);
-        fileChooser.setInitialDirectory(startDirectory);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Audio Files", "*.wav"),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
     }
 
+    //todo need to implement deep checking after each file been read
     public void readDefault(){
         try {
             path = new File("audio.wav").getCanonicalFile();
@@ -61,23 +60,27 @@ public class Wav_reader {
             System.out.println(ANSI_RED + "Cannot read previous file." + ANSI_RESET);
             System.exit(1);
         }
-        System.out.println(ANSI_YELLOW + "Selecting last valid file.\n" + ANSI_RESET);
     }
 
     public void readOne(int fileNumber){
+        File newPath;
         if (fileNumber==-1) {
             dialogStage = new Stage();
             dialogStage.show();
             dialogStage.hide();
 
+            fileChooser.setInitialDirectory(startDirectory);
             newPath = fileChooser.showOpenDialog(dialogStage);
             dialogStage.close();
         } else newPath = files.get(fileNumber);
 
-        if (newPath==null){
+        if (newPath ==null){
             System.out.println(ANSI_YELLOW + "\nNo file selected.\n" + ANSI_RESET);
             if (path==null) readDefault();
-            else readPrev();
+            else{
+                readPrev();
+                System.out.println(ANSI_YELLOW + "Selecting last valid file.\n" + ANSI_RESET);
+            }
             return;
         }
 
@@ -86,7 +89,10 @@ public class Wav_reader {
         } catch (IOException | WavFileException e) {
             System.out.println(ANSI_YELLOW + "\nWrong file extension.\n" + ANSI_RESET);
             if (path==null) readDefault();
-            else readPrev();
+            else{
+                readPrev();
+                System.out.println(ANSI_YELLOW + "Selecting last valid file.\n" + ANSI_RESET);
+            }
             return;
             }
 
@@ -99,6 +105,7 @@ public class Wav_reader {
         dialogStage.show();
         dialogStage.hide();
 
+        fileChooser.setInitialDirectory(startDirectory);
         files = fileChooser.showOpenMultipleDialog(dialogStage);
         if (files == null) filesSize = -1;
         else filesSize = files.size();

@@ -9,14 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added">
+    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/FunctionTestListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/FFTDataListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/CompleteDataListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/NewWindowListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/NewWindowListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" afterDir="false" />
@@ -57,8 +58,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -109,7 +110,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.vulpesnovis.Main" />
       <module name="stft-fit-tool.main" />
-      <option name="PROGRAM_PARAMETERS" value="-w blackman -s 10 -l 15 -F multiple" />
+      <option name="PROGRAM_PARAMETERS" value="-s 10 -l 20 -F multiple -f hann" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -174,7 +175,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662204739405</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo.">
+      <created>1662393905961</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1662393905961</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -194,15 +202,26 @@
     <MESSAGE value="Smoothly working with Hann and Hamming windows" />
     <MESSAGE value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
     <MESSAGE value="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added" />
+    <MESSAGE value="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo." />
+    <option name="LAST_COMMIT_MESSAGE" value="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java</url>
-          <line>297</line>
+          <line>321</line>
           <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java</url>
+          <line>140</line>
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java</url>
+          <line>194</line>
+          <option name="timeStamp" value="121" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -217,6 +236,6 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/stft_fit_tool$Main.ic" NAME="Main Coverage Results" MODIFIED="1662152013571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/stft_fit_tool$Main.ic" NAME="Main Coverage Results" MODIFIED="1662472178348" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

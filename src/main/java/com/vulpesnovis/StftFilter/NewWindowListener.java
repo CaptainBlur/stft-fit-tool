@@ -8,10 +8,6 @@ public interface NewWindowListener {
      * @param fftSnapshot key represents a frequency (need to be divided by 100 and written to the output as float)
      * and val is val in normalized dB, or absolute values.
      */
-    public void onWindowComputed(int timestamp, SparseIntArray fftSnapshot);
-
-    /**
-     * Called when windows snapshot output is over.
-     */
-    public void endOfStream();
+    public void onWindowComputed(SparseIntArray fftSnapshot);
+    public void onIdlePassed();
 }

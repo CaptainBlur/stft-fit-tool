@@ -1,11 +1,12 @@
 package com.vulpesnovis;
 
+import com.android.sdklib.util.SparseIntArray;
+import com.vulpesnovis.StftFilter.CompleteDataListener;
 import com.vulpesnovis.StftFilter.Processor;
 import com.vulpesnovis.WavFile.Wav_reader;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,7 +48,7 @@ public class ChangesHandler implements ChangesListener {
                 (timeValues, freqValues, fftDataset, magMin, magMax) ->
                         Platform.runLater(() ->
                                 operator.orderWaterfallDrawing(fftSize, magMin,magMax,timeValues,freqValues,fftDataset)),
-                true, false);
+                true);
         processor.process(reader.getDecodedInput(winSize,-1));
     }
 
@@ -124,7 +125,7 @@ public class ChangesHandler implements ChangesListener {
                 (timeValues, freqValues, fftDataset, magMin, magMax) ->
                         Platform.runLater(() ->
                                 operator.orderWaterfallDrawing(fftSize, magMin,magMax,timeValues,freqValues,fftDataset)),
-                true, false);
+                true);
         processor.process(reader.getDecodedInput(winSize,-1));
     }
 }

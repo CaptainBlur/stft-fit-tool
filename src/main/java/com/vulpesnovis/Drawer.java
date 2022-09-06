@@ -1,7 +1,9 @@
 package com.vulpesnovis;
 
 import com.android.sdklib.util.SparseIntArray;
-import com.vulpesnovis.StftFilter.FFTDataListener;
+import com.vulpesnovis.StftFilter.CompleteDataListener;
+import com.vulpesnovis.StftFilter.FunctionTestListener;
+import com.vulpesnovis.StftFilter.NewWindowListener;
 import com.vulpesnovis.StftFilter.Processor;
 import com.vulpesnovis.WavFile.Wav_reader;
 import javafx.application.Application;
@@ -14,7 +16,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Drawer extends Application implements FFTDataListener, Runnable{
+public class Drawer extends Application implements CompleteDataListener, FunctionTestListener, NewWindowListener,  Runnable{
 
     public final static String APP_NAME = "Spectrum waterfall";
     private static String[] args;
@@ -89,16 +91,47 @@ public class Drawer extends Application implements FFTDataListener, Runnable{
 
         if (Args.getValInt(initialArgs, "FFT_SIZE")==0)
             Args.replaceVal(initialArgs, "FFT_SIZE", String.valueOf(operator.getOptimalFftSizeMultiplier()));
-        Processor processor = new Processor(sampleRate, Args.getValInt(initialArgs, "FFT_SIZE"), winSize, Args.getValString(initialArgs, "WINDOW_FUNC"), this, true, false);
+
+
+//        Processor pr = new Processor(sampleRate, Args.getValInt(initialArgs, "FFT_SIZE"), "hann", this, true);
+//        double[] buffer = reader.getDecodedInput(winSize,-1);
+//        for (int i = 0; i < buffer.length; i++) {
+//            double[] window = new double[960];
+//            System.arraycopy(buffer, i, window, 0, 960);
+//            pr.processSingle(window);
+//            i+=960;
+//        }
+//        System.exit(0);
+
+
+        Processor processor = new Processor(sampleRate, Args.getValInt(initialArgs, "FFT_SIZE"), winSize, Args.getValString(initialArgs, "WINDOW_FUNC"),
+                this, true);
         processor.process(reader.getDecodedInput(winSize,-1));
 
         primaryStage.show();
+
+    }
+
+    @Override
+    public void onWindowComputed(SparseIntArray fftSnapshot) {
+
+    }
+
+    @Override
+    public void onIdlePassed() {
+
     }
 
     @Override
     public void onDataComputed(int[] timeValues, int[] freqValues, SparseIntArray fftDataset, int magMin, int magMax) {
         operator.orderWaterfallDrawing(Args.getValInt(initialArgs, "FFT_SIZE"),magMin,magMax,timeValues,freqValues,fftDataset);
     }
+
+    @Override
+    public void onRawFunctionComputed(double[] values) {
+        operator.orderFunctionDrawing(values);
+    }
+
     @Override
     public void run() {
         ConsoleHandler.initListener(CH, initialArgs.clone());
