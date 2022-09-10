@@ -19,6 +19,8 @@ public class ChangesHandler implements ChangesListener {
     private final Stage primaryStage;
     private final Wav_reader reader;
     private final JFXOperator operator;
+    private int fftSize;
+    private final CompleteDataListener cdl;
 
     public final static int CH_ONE=0;
     public final static int CH_LIST=1;
@@ -32,6 +34,9 @@ public class ChangesHandler implements ChangesListener {
         this.primaryStage = primaryStage;
         this.reader = reader;
         this.operator = operator;
+
+        cdl = (timeValues, freqValues, fftDataset, magMin, magMax) ->
+                Platform.runLater(() -> operator.orderWaterfallDrawing(fftSize, magMin,magMax,timeValues,freqValues,fftDataset));
     }
 
     @Override
@@ -39,16 +44,11 @@ public class ChangesHandler implements ChangesListener {
         reader.readPrev();
         int sampleRate = reader.getSampleRate();
         int winSize = Args.getValInt(args, "WINDOW_LENGTH");
-        int fftSize = Args.getValInt(args, "FFT_SIZE");
-        Platform.runLater(() -> {
-            operator.clearGroup();
-            operator.orderAxisDrawing(sampleRate, winSize, reader.getFileDuration());
-        });
-        Processor processor = new Processor(sampleRate, fftSize, winSize, Args.getValString(args, "WINDOW_FUNC"),
-                (timeValues, freqValues, fftDataset, magMin, magMax) ->
-                        Platform.runLater(() ->
-                                operator.orderWaterfallDrawing(fftSize, magMin,magMax,timeValues,freqValues,fftDataset)),
-                true);
+        fftSize = Args.getValInt(args, "FFT_SIZE");
+        Platform.runLater(operator::clearGroup);
+        Platform.runLater(() -> operator.orderAxisDrawing(sampleRate, winSize, reader.getFileDuration()));
+
+        Processor processor = new Processor(sampleRate, fftSize, winSize, Args.getValString(args, "WINDOW_FUNC"), cdl, true);
         processor.process(reader.getDecodedInput(winSize,-1));
     }
 
@@ -116,16 +116,11 @@ public class ChangesHandler implements ChangesListener {
 
         int sampleRate = reader.getSampleRate();
         int winSize = Args.getValInt(args, "WINDOW_LENGTH");
-        int fftSize = Args.getValInt(args, "FFT_SIZE");
-        Platform.runLater(() -> {
-            operator.clearGroup();
-            operator.orderAxisDrawing(sampleRate, winSize, reader.getFileDuration());
-        });
-        Processor processor = new Processor(sampleRate, fftSize, winSize, Args.getValString(args, "WINDOW_FUNC"),
-                (timeValues, freqValues, fftDataset, magMin, magMax) ->
-                        Platform.runLater(() ->
-                                operator.orderWaterfallDrawing(fftSize, magMin,magMax,timeValues,freqValues,fftDataset)),
-                true);
+        fftSize = Args.getValInt(args, "FFT_SIZE");
+        Platform.runLater(operator::clearGroup);
+        Platform.runLater(() -> operator.orderAxisDrawing(sampleRate, winSize, reader.getFileDuration()));
+
+        Processor processor = new Processor(sampleRate, fftSize, winSize, Args.getValString(args, "WINDOW_FUNC"), cdl, true);
         processor.process(reader.getDecodedInput(winSize,-1));
     }
 }

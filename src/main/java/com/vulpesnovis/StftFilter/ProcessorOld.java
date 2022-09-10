@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Processor {
+public class ProcessorOld {
     private int sampleRate; //inHz
     private short winSize; //in mS
     private int fftSize;
@@ -30,7 +30,7 @@ public class Processor {
      * @param winSize width of the STFT window in mS.
      * @param dbOutput present output values normalized by dBFS.
      */
-    public Processor(int sampleRate, int fftSize, int winSize, String func, CompleteDataListener listener, boolean dbOutput){
+    public ProcessorOld(int sampleRate, int fftSize, int winSize, String func, CompleteDataListener listener, boolean dbOutput){
         this.sampleRate = sampleRate;
         this.func = Objects.requireNonNull(func);
         this.fftSize = (int)Math.pow(2,fftSize);
@@ -39,14 +39,14 @@ public class Processor {
         this.dbOutput = dbOutput;
         winSizeInSamples = ((float)winSize/1000) / (1/(float)sampleRate);
     }
-    public Processor(int sampleRate, int fftSize, String func, NewWindowListener listener, boolean dbOutput){
+    public ProcessorOld(int sampleRate, int fftSize, String func, NewWindowListener listener, boolean dbOutput){
         this.sampleRate = sampleRate;
         this.func = Objects.requireNonNull(func);
         this.fftSize = (int)Math.pow(2,fftSize);
         windowListener = Objects.requireNonNull(listener);
         this.dbOutput = dbOutput;
     }
-    public Processor(String func, FunctionTestListener listener, int windowSize, boolean dbOutput){
+    public ProcessorOld(String func, FunctionTestListener listener, int windowSize, boolean dbOutput){
         this.func = Objects.requireNonNull(func);
         functionListener = Objects.requireNonNull(listener);
         this.windowSize = windowSize;

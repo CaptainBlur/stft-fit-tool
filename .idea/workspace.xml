@@ -9,18 +9,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/FunctionTestListener.java" afterDir="false" />
+    <list default="true" id="2cdcc509-adce-46bf-a1fc-ee82ac0e4868" name="Changes" comment="Processor's functionality extended. All cosine-form windows added. That's all for now, I guess.">
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Args.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ChangesHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/ConsoleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/Drawer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/JFXOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/FFTDataListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/CompleteDataListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/NewWindowListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/NewWindowListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Windows.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/WavFile/Wav_reader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/ProcessorOld.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +56,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Kotlin Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -68,6 +67,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2DJ3IdSBE6wUedDDn6cOzqdyZ5n" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -110,7 +112,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.vulpesnovis.Main" />
       <module name="stft-fit-tool.main" />
-      <option name="PROGRAM_PARAMETERS" value="-s 10 -l 20 -F multiple -f hann" />
+      <option name="PROGRAM_PARAMETERS" value="-s 10 -l 20 -F default -f hann" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -182,7 +184,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662393905961</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Processor's functionality extended. All cosine-form windows added. That's all for now, I guess.">
+      <created>1662490712247</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1662490712247</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -203,7 +212,8 @@
     <MESSAGE value="Proper runtime console input added. No-arguments startup (with defaults) enabled" />
     <MESSAGE value="Console menu enhanced. Process of implementing new window simplified. Idle frames (at the start of an input file) check added. Blackman added" />
     <MESSAGE value="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo." />
-    <option name="LAST_COMMIT_MESSAGE" value="Multiple input added: at start and at runtime, default, single and multiple. Also, default singleton dummy file added to repo." />
+    <MESSAGE value="Processor's functionality extended. All cosine-form windows added. That's all for now, I guess." />
+    <option name="LAST_COMMIT_MESSAGE" value="Processor's functionality extended. All cosine-form windows added. That's all for now, I guess." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -214,12 +224,7 @@
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java</url>
-          <line>140</line>
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/Processor.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/vulpesnovis/StftFilter/ProcessorOld.java</url>
           <line>194</line>
           <option name="timeStamp" value="121" />
         </line-breakpoint>

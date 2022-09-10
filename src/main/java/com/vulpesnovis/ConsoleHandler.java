@@ -37,7 +37,7 @@ public class ConsoleHandler {
 
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static ChangesListener listener;
-    //In two in the morning I found out that my static methods in static context just becomes freaking Godless
+    //In two in the morning I found out that my static methods in static context just becomes freaking Godlike
     private static Args[] args;
 
     final static String ANSI_RESET = "\u001B[0m";

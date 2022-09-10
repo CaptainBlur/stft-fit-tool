@@ -1,10 +1,7 @@
 package com.vulpesnovis;
 
 import com.android.sdklib.util.SparseIntArray;
-import com.vulpesnovis.StftFilter.CompleteDataListener;
-import com.vulpesnovis.StftFilter.FunctionTestListener;
-import com.vulpesnovis.StftFilter.NewWindowListener;
-import com.vulpesnovis.StftFilter.Processor;
+import com.vulpesnovis.StftFilter.*;
 import com.vulpesnovis.WavFile.Wav_reader;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,7 +13,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Drawer extends Application implements CompleteDataListener, FunctionTestListener, NewWindowListener,  Runnable{
+public class Drawer extends Application implements CompleteDataListener, FunctionTestListener, Runnable{
 
     public final static String APP_NAME = "Spectrum waterfall";
     private static String[] args;
@@ -109,16 +106,6 @@ public class Drawer extends Application implements CompleteDataListener, Functio
         processor.process(reader.getDecodedInput(winSize,-1));
 
         primaryStage.show();
-
-    }
-
-    @Override
-    public void onWindowComputed(SparseIntArray fftSnapshot) {
-
-    }
-
-    @Override
-    public void onIdlePassed() {
 
     }
 

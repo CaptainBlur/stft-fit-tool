@@ -256,9 +256,9 @@ public class JFXOperator {
 
         functionGC.setFill(Color.ORANGERED);
         int xCoord = (int)ranges.wfAbscissaStart;
-        for (int i = 0; i < window.length; i++) {
-            int height = (int) (Math.abs(yMax-yMin) * window[i]);
-            functionGC.fillRect(xCoord , yMax, 1, -height);
+        for (double v : window) {
+            int height = (int) (Math.abs(yMax - yMin) * v);
+            functionGC.fillRect(xCoord, yMax, 1, -height);
             xCoord++;
         }
 
